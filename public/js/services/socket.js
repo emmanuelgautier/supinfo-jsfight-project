@@ -1,8 +1,6 @@
 (function(io, app) {
   'use strict';
 
-  app.factory('$socket', socket);
-
   var socket = ['$rootScope', function ($rootScope) {
     var $socket = function(namespace) {
       var socket = io('/' + namespace),
@@ -67,4 +65,6 @@
       fight: $socket('fight')
     };
   }];
+
+  app.factory('$socket', socket);
 } (io, app));

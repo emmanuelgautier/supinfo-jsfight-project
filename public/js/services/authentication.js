@@ -1,8 +1,6 @@
 (function(app) {
   'use strict';
 
-  app.factory('$session', authentication);
-
   var authentication = ['$session', function($session) {
     var $authentication = {};
 
@@ -20,4 +18,6 @@
 
     return $authentication;
   }];
+
+  app.factory('$authentication', authentication);
 } (app));

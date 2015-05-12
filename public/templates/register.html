@@ -1,1 +1,16 @@
-register
+<div ng-controller="AuthController">
+    <form class="form-auth form-register" action="javascript:;" ng-submit="register()">
+        <h2 class="form-auth form-register-heading">Registration</h2>
+
+          <label for="username" class="sr-only">Username</label>
+          <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+          
+          <label for="password" class="sr-only">Password</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+          
+          <label for="password_confirmation" class="sr-only">Password</label>
+          <input type="password" id="password_confirmation" name="password_confirmation" class="form-control last-input" placeholder="Password Verification" required>
+
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    </form>
+</div>
