@@ -6,7 +6,7 @@ var express      = require('express'),
     bodyParser   = require('body-parser');
 
 module.exports = function(app, sessionStore, config) {
-  app.use(express.static(config.root + '/public'));
+  app.use(express.static(config.root + '/public', {'index': ['index.html', 'index.htm']}));
 
   app.use(cookieParser());
 
