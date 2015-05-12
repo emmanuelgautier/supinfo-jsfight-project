@@ -7,4 +7,4 @@
   ]);
 
   window.app = app;
-}(window, angular));
+} (window, angular));
