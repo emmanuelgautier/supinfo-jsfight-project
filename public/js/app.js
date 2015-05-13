@@ -14,6 +14,7 @@
     '/register': {
       templateUrl : 'templates/register.html'
     },
+    '/fight/:token': {
       templateUrl : 'templates/fight.html',
       auth: true
     },
@@ -33,6 +34,7 @@
 
       $locationProvider.html5Mode({
         enabled: false,
+        requireBase: false
       });
 
       $locationProvider.hashPrefix('!');

@@ -9,7 +9,7 @@
     };
 
     $authentication.isAuthenticated = function() {
-      return !!$session.user && !!$session.user.id;
+      return !!$session.user && !!$session.user._id;
     };
 
     $authentication.logout = function() {

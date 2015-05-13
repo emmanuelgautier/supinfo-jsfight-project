@@ -21,7 +21,9 @@
           username: this.username,
           password: this.password
         }).success(function(data, status) {
+          $authentication.setUser(data);
 
+          $location.path('/lobby');
         }).error(function(data, status) {
 
         });
