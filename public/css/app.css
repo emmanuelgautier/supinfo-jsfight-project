@@ -44,7 +44,7 @@ body.auth-page {
   padding: 15px;
 }
 #quickFightZone {
-  background-image: url(ZoneDeCombat.png);
+  background-image: url(zoneDeCombat.png);
   background-size: 100% 100%;
 }
 
@@ -72,14 +72,12 @@ body.auth-page {
   height: 214px;
   display: block;
   overflow-y: auto;
-  overflow : scroll;
 }
 
 #allUsers {
   height: 260px;
   display: block;
   overflow-y: auto;
-  overflow : scroll;
 }
 
 
