@@ -12,7 +12,8 @@
 
   /**
    *
-   *
+   * @param {Function} callback
+   * @api public
    */
   Body.prototype.onCollision = function(callback) {
     if(typeof callback != 'function') {

@@ -1,60 +1,61 @@
 (function(Game) {
-	'use strict';
+  'use strict';
 
-	var stickman = {
-		speed: 256, // movement in pixels per second
-		x: 0,
-		y: 0
-	};
+  var stickman = {
+    speed: 256, // movement in pixels per second
+    x: 0,
+    y: 0
+  };
+
   /**
    * @constructor
+   * @param {String} uuid
+   * @param {Object} Health
    * @api public
    */
-	function Player() {
+  function Player(uuid, Health) {
 
-	}
+    this._uuid = uuid;
+    this.Health = Health;
+  }
 
-	/**
-	 * @api public
-	 */
-	Player.prototype.Health = null;
+  Player.prototype.jump = function () {
 
-	/**
-	 * @api public
-	 */
-	Player.prototype.Controls = null;
+    stickman.y -= stickman.speed * modifier;
+  };
 
-	Player.prototype.jump = function () {
-		stickman.y -= stickman.speed * modifier;
-	};
+  Player.prototype.crouch = function () {
+    
+  };
 
-	Player.prototype.crouch() = function () {
-		
-	};
+  Player.prototype.left = function () {
+    
+  };
 
-	Player.prototype.left() = function () {
-		stickman.x -= stickman.speed * modifier;
-	};
+  Player.prototype.right = function () {
+    
+  };
 
-	Player.prototype.right() = function () {
-		stickman.x += stickman.speed * modifier;
-	};
+  Player.prototype.block = function () {
+    
+  };
 
-	Player.prototype.lock() = function () {
-		
-	};
+  Player.prototype.punch = function () {
+    
+  };
 
-	Player.prototype.punch() = function () {
-		
-	};
+  Player.prototype.kick = function () {
+    
+  };
 
-	Player.prototype.kick() = function () {
-		
-	};
+  Player.prototype.specialAttack  = function () {
+    
+  };
 
-	Player.prototype.special_attack()  = function () {
-		
-	};
+  /**
+   * @api public
+   */
+  Player.prototype.Health = null;
 
-	Game.Entities.Player = Player;
+  Game.Entities.Player = Player;
 }(Game));

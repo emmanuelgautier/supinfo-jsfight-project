@@ -17,7 +17,7 @@ var config = {
     secure: false,
     maxAge: 3600000
   },
-  port: 3000,
+  port: 80,
   db: 'mongodb://localhost/fight'
 };
 

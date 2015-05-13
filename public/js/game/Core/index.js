@@ -22,7 +22,7 @@
   };
 
    /**
-    * @apu public
+    * @api public
     */
 
   /**
