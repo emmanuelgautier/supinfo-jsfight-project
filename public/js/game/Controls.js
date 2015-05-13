@@ -1,6 +1,16 @@
 (function(Game) {
   'use strict';
 
+  var KEY_Z = 90;
+  var KEY_S = 83;
+  var KEY_Q = 81;
+  var KEY_D = 68;
+  var KEY_I = 73;
+  var KEY_O = 79;
+  var KEY_K = 75;
+  var KEY_L = 76;
+
+
   /**
    *
    * @constructor
@@ -8,47 +18,82 @@
    * @param {Number} velocity
    * @api public
    */
-  function Controls(Player, velocity) {
 
-    if(Player) {
-      this.Player = Player;
+  function Controls() {
+
     }
 
-    this._velocity = velocity;
+  Controls.prototype.onJump = function(callback) {
+    this.jump = callback;
   };
 
-  /**
-   * Move paddle to specify position
-   *
-   * @param {Number} x
-   * @api public
-   */
-  Controls.prototype.move = function(x) {
-
-    this.Player.position[0] = x;
+  Controls.prototype.onCrouch = function(callback) {
+    this.crouch = callback;
   };
 
-  /**
-   * Move paddle up
-   *
-   * @param {Numbeer} n
-   * @api public
-   */
-  Controls.prototype.up = function(n) {
-
-    this.Player.velocity[1] = this._velocity * n;
+  Controls.prototype.onLeft = function(callback) {
+    this.left = callback;
   };
 
-  /**
-   * Move paddle down
-   *
-   * @param {Number} n
-   * @api public
-   */
-  Controls.prototype.down = function(n) {
-
-    this.Player.velocity[1] = -this._velocity * n;
+  Controls.prototype.onRight = function(callback) {
+    this.right = callback;
   };
+
+  Controls.prototype.onBlock = function(callback) {
+    this.block = callback;
+  };
+
+  Controls.prototype.onPunch = function(callback) {
+    this.punch = callback;
+  };
+
+  Controls.prototype.onKick = function(callback) {
+    this.kick = callback;
+  };
+
+  Controls.prototype.onSpecial_Attack = function(callback) {
+    this.special_attack = callback;
+  };
+
+  Controls.prototype.listen = function() {
+    window.onkeydown = function(event) {
+      switch(event.keyCode) {
+
+        case KEY_Z: 
+          this.jump.call();
+        break;
+
+        case KEY_S:
+          this.crouch.call();
+        break;
+
+        case KEY_Q:
+          this.left.call();
+        break;
+
+        case KEY_D:
+          this.right.call();
+        break;
+
+        case KEY_I: 
+          this.block.call();
+        break;
+
+        case KEY_O:
+          this.punch.call();
+        break;
+
+        case KEY_K:
+          this.kick.call();
+        break;
+
+        case KEY_L:
+          this.special_attack.call();
+        break;
+        default: break;
+      }
+    };
+  }
 
   Game.Entities.Controls = Controls;
 }(Game));
