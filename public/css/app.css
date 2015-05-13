@@ -43,3 +43,43 @@ body.auth-page {
 .bg-success, .bg-danger {
   padding: 15px;
 }
+#quickFightZone {
+  background-image: url(ZoneDeCombat.png);
+  background-size: 100% 100%;
+}
+
+.quickFightButton {
+  width: 100%;
+  height: 50px;
+  margin-top: 149px;
+  margin-bottom: 83px;
+}
+.message {
+  width: 80%;
+}
+
+.send {
+  width: 19%;
+}
+
+.imgChatBox {
+  width: 100%;
+}
+.imgUserOnline {
+  width: 100%;
+}
+#allMessages {
+  height: 214px;
+  display: block;
+  overflow-y: auto;
+  overflow : scroll;
+}
+
+#allUsers {
+  height: 260px;
+  display: block;
+  overflow-y: auto;
+  overflow : scroll;
+}
+
+
