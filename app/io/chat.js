@@ -1,3 +1,5 @@
+'use strict';
+
 var cookie = require('cookie'),
     mongoose = require('mongoose'),
 
@@ -5,10 +7,11 @@ var cookie = require('cookie'),
     Message = mongoose.model('Message');
 
 module.exports = function(io, sessionStore) {
-  var _user = {},
-      _room = {};
+  var _user = {};
 
-  io.on('connection', function(socket) {
+  var chat = io.of('/chat');
+
+  chat.on('connection', function(socket) {
     _user[socket.id] = {
       id: null,
       u: null,

@@ -1,79 +1,30 @@
-<div id="lobbyPage">
-  <div class="rowLobby">
-    <div id="quickFightZone" class="col-md-3">
-            <img src="images/zoneDeCombat.png" class="imgZoneDeCombat" alt="img Zone De Combat" />
-
-
-      <button class= "quickFightButton" type="button">Quick Fight</button>
-
+<div class="lobbyPage">
+  <div class="row">
+    <div class="col-md-3 quickFightZone">
+        <img src="images/zoneDeCombat.png" class="imgZoneDeCombat" alt="img Zone De Combat" />
+        <button class= "quickFightButton" type="button">Quick Fight</button>
     </div>
-      <div id="chatBox"class="col-md-6">
-      <img src="images/chatbox.png" class="imgChatBox" alt="Ban chatbox" />
 
-        <ul id="allMessages" class="list-group">
-          <li class="list-group-item ">Message Numéro 1</li>
-          <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
+    <div class="col-md-6 chatBox" ng-controller="ChatController" ng-init="init()">
+        <img src="images/chatbox.png" class="imgChatBox" alt="Ban chatbox" />
+
+        <ul class="list-group" ng-repeat="message in messages">
+            <li class="list-group-item ">Message Numéro 1</li>
+            <li class="list-group-item ">User 1</li>
         </ul>
 
-        <form >
-          <input class="message" type="text" size="10" />
-          <button class="send" type="submit" value="Send">Send</button>
+        <form action="javascript:;" ng-submit="newMessage()" class="form-inline">
+            <div class="form-group">
+                <input type="text" ng-model="text" class="form-control">
+            </div>
+            <button class="btn btn-default" type="submit">Send</button>
         </form>
-      </div>
-    <div id="userOnline" class="col-md-3">
+    </div>
+
+    <div class="col-md-3 userOnline">
       <img src="images/useronline.png" class="imgUserOnline" alt="Ban userOnline" />
-      <ul id="allUsers" class="list-group">
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
-        <li class="list-group-item ">User 1</li>
+      <ul class="list-group" ng-repeat="user in users">
+        <li class="list-group-item ">{user.displayName}</li>
       </ul>
     </div>
   </div>

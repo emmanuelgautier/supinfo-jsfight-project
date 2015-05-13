@@ -16,18 +16,9 @@ var UserPhotosSchema = new Schema({
 });
 
 var UserSchema = new Schema({
-  provider: String,
   username: String,
   password: String,
-  displayName: String,
-  name: {
-    familyName: String,
-    givenName: String,
-    middleName: String
-  },
-  emails: [UserEmailsSchema],
-  image: String,
-  photos: [UserPhotosSchema]
+  displayName: String
 });
 
 UserSchema.pre('save', function(next) {
