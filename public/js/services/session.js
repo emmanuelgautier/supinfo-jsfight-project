@@ -1,10 +1,10 @@
 (function(app) {
   'use strict';
 
-  var session = [function() {
-    var $session = {};
+  var session = ['$localStorage', function($localStorage) {
+    $localStorage.session = $localStorage.session || {};
 
-    return $session;
+    return $localStorage.session;
   }];
 
   app.factory('$session', session);

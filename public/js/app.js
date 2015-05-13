@@ -1,7 +1,7 @@
 (function(window, angular) {
   'use strict';
 
-  var app = angular.module('fight', ['ngRoute', 'ngResource']);
+  var app = angular.module('fight', ['ngRoute', 'ngResource', 'ngStorage']);
 
   var routes = {
     '/': {
