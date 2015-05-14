@@ -1,5 +1,14 @@
-(function(Game) {
+(function(window, Game) {
   'use strict';
+
+  var KEY_Z = 90,
+      KEY_S = 83,
+      KEY_Q = 81,
+      KEY_D = 68,
+      KEY_I = 73,
+      KEY_O = 79,
+      KEY_K = 75,
+      KEY_L = 76;
 
   /**
    *
@@ -8,47 +17,122 @@
    * @param {Number} velocity
    * @api public
    */
-  function Controls(Player, velocity) {
+  function Controls() {
+    //
+  }
 
-    if(Player) {
-      this.Player = Player;
+  Controls.prototype.onLeft = function(callback) {
+
+    if(typeof callback != 'function') {
+      throw "Controls callback must be a function !";
     }
 
-    this._velocity = velocity;
+    this.left = callback;
   };
 
-  /**
-   * Move paddle to specify position
-   *
-   * @param {Number} x
-   * @api public
-   */
-  Controls.prototype.move = function(x) {
+  Controls.prototype.onRight = function(callback) {
 
-    this.Player.position[0] = x;
+    if(typeof callback != 'function') {
+      throw "Controls callback must be a function !";
+    }
+
+    this.right = callback;
   };
 
-  /**
-   * Move paddle up
-   *
-   * @param {Numbeer} n
-   * @api public
-   */
-  Controls.prototype.up = function(n) {
+  Controls.prototype.onJump = function(callback) {
 
-    this.Player.velocity[1] = this._velocity * n;
+    if(typeof callback != 'function') {
+      throw "Controls callback must be a function !";
+    }
+
+    this.jump = callback;
   };
 
-  /**
-   * Move paddle down
-   *
-   * @param {Number} n
-   * @api public
-   */
-  Controls.prototype.down = function(n) {
+  Controls.prototype.onCrouch = function(callback) {
 
-    this.Player.velocity[1] = -this._velocity * n;
+    if(typeof callback != 'function') {
+      throw "Controls callback must be a function !";
+    }
+
+    this.crouch = callback;
+  };
+
+  Controls.prototype.onBlock = function(callback) {
+
+    if(typeof callback != 'function') {
+      throw "Controls callback must be a function !";
+    }
+
+    this.block = callback;
+  };
+
+  Controls.prototype.onPunch = function(callback) {
+
+    if(typeof callback != 'function') {
+      throw "Controls callback must be a function !";
+    }
+
+    this.punch = callback;
+  };
+
+  Controls.prototype.onKick = function(callback) {
+
+    if(typeof callback != 'function') {
+      throw "Controls callback must be a function !";
+    }
+
+    this.kick = callback;
+  };
+
+  Controls.prototype.onSpecialAttack = function(callback) {
+
+    if(typeof callback != 'function') {
+      throw "Controls callback must be a function !";
+    }
+
+    this.specialAttack = callback;
+  };
+
+  Controls.prototype.listen = function() {
+
+    window.onkeydown = function(event) {
+      switch(event.keyCode) {
+        case KEY_Q:
+          this.left.call();
+          break;
+
+        case KEY_D:
+          this.right.call();
+          break;
+
+        case KEY_Z: 
+          this.jump.call();
+          break;
+
+        case KEY_S:
+          this.crouch.call();
+          break;
+
+        case KEY_I: 
+          this.block.call();
+          break;
+
+        case KEY_O:
+          this.punch.call();
+          break;
+
+        case KEY_K:
+          this.kick.call();
+          break;
+
+        case KEY_L:
+          this.specialAttack.call();
+          break;
+
+        default: break;
+      }
+    };
   };
 
   Game.Entities.Controls = Controls;
-}(Game));
+}(window, Game));
