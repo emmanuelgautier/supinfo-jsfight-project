@@ -27,7 +27,7 @@
    */
   Health.prototype.loose = function(life) {
 
-    return this.life = -= life;
+    return this.life -= life;
   };
 
   /**

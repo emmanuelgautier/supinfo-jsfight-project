@@ -28,7 +28,6 @@
    * @api public
    */
   Body.prototype.collide = function(withObject) {
-
     //
   };
 

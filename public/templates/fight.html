@@ -1,31 +1,20 @@
 <div ng-controller="GameController" ng-init="startGame()">
     <div class="row">
-        <div id="controlZone" class="col-md-3">
-            
-            <img src="images/controlZone.png" class="img-rounded" alt="controlZone" width="475" height="800">
-
+        <div id="controlZone" class="col-md-3 media">
+            <img src="images/controlZone.png" class="img-rounded media-object" alt="controlZone">
         </div>
 
         <div id="timeZone"class="col-md-9">
-
-            <img src="images/timerZone.png" class="img-rounded" alt="controlZone" width="1427" height="50">
-
-            <div id="fightZone"class="col-md-9" style="padding-left:0px;">
-            fightZone
+            <div class="row">
+                <div class="col-md-12 media">
+                    <img src="images/timerZone.png" class="img-rounded media-object" alt="controlZone">
+                </div>
             </div>
-
+            <div class="row">
+                <div class="col-md-12">
+                    <canvas id="fightArea"></canvas>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="row">
-
-    </div>
-
-    <script type="text/javascript" src="js/game/Player.js"></script>
-    <script type="text/javascript" src="js/game/Controls.js"></script>
-    <script type="text/javascript" src="js/game/Health.js"></script>
-    <script type="text/javascript" src="js/game/World.js"></script>
-    <script type="text/javascript" src="js/game/Core/index.js"></script>
-    <script type="text/javascript" src="js/game/Core/Objects/index.js"></script>
-    <script type="text/javascript" src="js/game/Core/Objects/Rectangle.js"></script>
 </div>
