@@ -41,12 +41,14 @@ module.exports = function(io, sessionStore) {
 
     socket.on('new message', function(text) {
       var message = new Message();
-        message.text = text;
-        message.author = _user[socket.id].u;
+      message.text = text;
+      message.author = _user[socket.id].u;
 
       message.save();
 
-      io.sockets.emit('message', message);
+      // Changed io.sockets.emit to broadcast + emit, just because
+      socket.broadcast.emit('message', message);
+      socket.emit('message', message);
     });
   });
 };

@@ -3,6 +3,7 @@
 
   var ChatController = ['$scope', '$socket', function($scope, $socket) {
     var socket = $socket.chat;
+    $scope.messages = [];
 
     $scope.init = function() {
       socket.on('message', this.onNewMessage);
@@ -13,7 +14,7 @@
     };
 
     $scope.onNewMessage = function(message) {
-      this.messages.push(message);
+      $scope.messages.push(message);
     };
   }];
 
