@@ -1,7 +1,7 @@
 (function(app) {
   'use strict';
 
-  var authentication = ['$session', function($session) {
+  var authentication = ['$http', '$session', function($http, $session) {
     var $authentication = {};
 
     $authentication.setUser = function(user) {
@@ -15,6 +15,14 @@
     $authentication.logout = function() {
       $session.user = null;
     };
+
+    if($authentication.isAuthenticated()) {
+      $http.get('/me').success(function(user) {
+        $session.user = user;
+      }).error(function() {
+        $session.user = null;
+      });
+    }
 
     return $authentication;
   }];

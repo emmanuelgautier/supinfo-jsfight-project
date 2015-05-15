@@ -48,6 +48,14 @@ module.exports = function(app) {
     }
   );
 
+  app.get('/me', function(req, res) {
+      if(!req.user) {
+        return res.sendStatus(401);
+      }
+
+      res.json(req.user);
+  });
+
   app.get('/logout',
     function(req, res) {
       req.logout();
