@@ -41,12 +41,12 @@ module.exports = function(io, sessionStore) {
 
     socket.on('new message', function(text) {
       var message = new Message();
-      message.text = text; //essayer d'afficher cette variable dans le lobby.html
-      message.author = _user[socket.id].u; // problème de relation avec mongoose
+      message.text = text;
+      message.author = _user[socket.id].u;
   
       message.save();
 
-      // Changed io.sockets.emit to broadcast + emit, just because
+      //broadcast message to all users included emitter
       socket.broadcast.emit('message', message);
       socket.emit('message', message);
     });
