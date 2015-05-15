@@ -9,9 +9,13 @@
         <img src="images/chatbox.png" class="imgChatBox" alt="Ban chatbox" />
 
         <ul class="list-group" ng-repeat="message in messages">
-            <li class="list-group-item ">Message Numéro 1</li>
-            <li class="list-group-item ">User 1</li>
+            <li class="list-group-item ">message</li>     <!-- insérer la variable message.text de chat.js ici -->
+            <li class="list-group-item ">User 1</li>       <!-- insérer la variable message.author de chat.js ici -->
         </ul>
+
+        <script type=«text/javascript»>
+        <script language="JavaScript">document.write(message);
+        </script>
 
         <form action="javascript:;" ng-submit="newMessage()" class="form-inline">
             <div class="form-group">
