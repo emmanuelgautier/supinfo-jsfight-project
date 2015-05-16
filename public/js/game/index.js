@@ -14,6 +14,17 @@
    */
   function Game() {
 
+    this.interval = 20;
+    this.startTime = new Date().getTime();
+    this.time = this.startTime;
+    this.lastTime = 0;
+
+    this.physicsElapsed = this.calculatePhysicsElapsed(this.interval);
+
+    this._sprites = [];
+    this._spritesWidth = 0;
+    this._spritesHeight = 0;
+
     this.uuids = [];
     this.users = {};
 
@@ -21,6 +32,8 @@
     this.Player = [];
 
     this._socket = null;
+
+    this.running = false;
   }
 
   /**
@@ -42,6 +55,70 @@
   };
 
   /**
+   * Define players sprites
+   *
+   * @param {Array} sprites
+   */
+  Game.prototype.setPlayersSprites = function(spritesWidth, spritesHeight, sprites) {
+
+    this._spritesWidth = spritesWidth;
+    this._spritesHeight = spritesHeight;
+
+    this._sprites = sprites;
+  };
+
+  /**
+   * Preload game object
+   *
+   * @api public
+   */
+  Game.prototype.preload = function() {
+
+    this.World = new this.Entities.World();
+      this.World.create();
+
+    //create my player
+    var myPlayer = this.myPlayer = this._createPlayer();
+      myPlayer.setSprites(this._sprites[0], this._spritesWidth, this._spritesHeight, {
+        'default': 0,
+        'run'    : [7, 8, 9],
+        'retire' : 31,
+        'jump'   : [16, 17],
+        'crouch' : 20,
+        'block'  : 40,
+        'kick'   : [45, 46],
+        'special': [49, 50] 
+      });
+
+    //create opponent player
+    var opponentPlayer = this.opponentPlayer = this._createPlayer();
+      opponentPlayer.setSprites(this._sprites[1], this._spritesWidth, this._spritesHeight, {
+        'default': 0,
+        'run'    : [7, 8, 9],
+        'retire' : 31,
+        'jump'   : [16, 17],
+        'crouch' : 20,
+        'block'  : 40,
+        'kick'   : [45, 46],
+        'special': [49, 50] 
+      });
+  };
+
+  /**
+   *
+   * @api protected
+   */
+  Game.prototype.update = function() {
+
+    this.broadcast('position', myPlayer.position);
+
+    //position check
+    //if one player win
+  };
+
+  /**
+   * Start game
+   *
    * @param {Object} fight
    * @api public
    */
@@ -50,14 +127,8 @@
     /*this._token = fight.token;
     this._fight = fight;*/
 
-    this.World = new this.Entities.World();
-      this.World.create();
-
-    //create my player
-    var myPlayer = this.myPlayer = this._createPlayer();
-
-    //create opponent player
-    this._createPlayer();
+    var myPlayer = this.myPlayer,
+        opponentPlayer = this.opponentPlayer;
 
     this.Controls = new this.Entities.Controls(this._socket);
       this.Controls.onRight(myPlayer.right);
@@ -78,6 +149,75 @@
     this.Core.startRendering();
 
     this.Controls.listen();
+
+    this.running = true;
+
+    this.run();
+  };
+
+  /**
+   * Stop game
+   *
+   * @api public
+   */
+  Game.prototype.stop = function() {
+
+    this.running = false;
+  };
+
+  /**
+   *
+   * @api protected
+   */
+  Game.prototype.run = function() {
+
+    if(this.running) {
+      this.updatePaddles();
+
+      this.time = new Date().getTime();
+      if(this.lastTime <= this.time) {
+        this.update();
+
+        this.lastTime += this.physicsElapsed;
+      }
+
+      var that = this;
+      setTimeout(function() { that.run(); }, 5);
+    }
+  };
+
+  /**
+   * Calculate physics elapsed in milliseconds from interval refresh
+   *
+   * @param {Number}
+   * @return {Number}
+   * @api protected
+   */
+  Game.prototype.calculatePhysicsElapsed = function(interval) {
+
+    return Math.round(1000 / interval);
+  };
+
+  /**
+   *
+   * @return {Number}
+   * @api public
+   */
+  Game.prototype.getInterval = function() {
+
+    return this.interval;
+  };
+
+  /**
+   *
+   * @param {Number} interval
+   * @api public
+   */
+  Game.prototype.setInterval = function(interval) {
+
+    this.interval = interval;
+
+    this.physicsElapsed = this.calculatePhysicsElapsed(interval);
   };
 
   /**

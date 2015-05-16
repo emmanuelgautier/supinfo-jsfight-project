@@ -9,10 +9,7 @@
     window.cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
 
     this._backgroundImageLoaded = false;
-    this._spritesLoaded = false;
-
     this._backgroundImage = null;
-    this._spritesImage = null;
 
     this._canvas = null;
 
@@ -61,20 +58,6 @@
   };
 
   /**
-   * Load Sprites image
-   *
-   * @param {String} path
-   * @api public
-   */
-  Core.prototype.loadSpritesImage = function(path) {
-    var that = this;
-
-    this._spritesImage = this.loadImage(path, function() {
-      that._spritesLoaded = true;
-    });
-  };
-
-  /**
    * @api protected
    */
   Core.prototype.checkCollision = function() {
@@ -84,11 +67,12 @@
   };
 
   /**
-   * 
+   * Update objects position
+   *
+   * @api public
    */
   Core.prototype.update = function() {
     
-
   };
 
   /**
@@ -99,6 +83,10 @@
    */
   Core.prototype.paint = function(time) {
     this._canvas.drawImage(this._backgroundImage, 0, 0);
+
+    for(var object in this.objects) {
+      this._canvas.drawImage.apply(this._canvas, this.objects[object].getSprite());
+    }
   };
 
   /**
@@ -108,8 +96,20 @@
    * @api public
    */
   Core.prototype.ready = function() {
-    return (this._canvas != null && 
-      this._backgroundImageLoaded && this._spritesLoaded);
+    var ready = (this._canvas != null && 
+      this._backgroundImageLoaded);
+
+    if(!ready) {
+      return ready;
+    }
+
+    for(var object in this.objects) {
+      if(typeof object.ready === 'function' && !object.ready()) {
+        return false;
+      }
+    }
+
+    return true;
   };
 
   /**
@@ -118,7 +118,10 @@
    * @api public
    */
   Core.prototype.startRendering = function() {
-    this._animationFrameId = window.requestAnimationFrame(this.paint);
+    var that = this;
+    this._animationFrameId = window.requestAnimationFrame(function(time) {
+      that.paint.apply(that, [time]);
+    });
   };
 
   /**

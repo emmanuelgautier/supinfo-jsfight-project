@@ -1,11 +1,7 @@
 (function(Game) {
   'use strict';
 
-  var stickman = {
-    speed: 256, // movement in pixels per second
-    x: 0,
-    y: 0
-  };
+  var SPEED = 
 
   /**
    * @constructor
@@ -14,6 +10,7 @@
    * @api public
    */
   function Player(uuid, Health) {
+    Game.Core.objects[uuid] = this;
 
     this._uuid = uuid;
     this.Health = Health;
@@ -25,11 +22,13 @@
   };
 
   Player.prototype.crouch = function () {
-    
+
+    this.state = 'crouch';
   };
 
   Player.prototype.left = function () {
     
+    this.state = 'crouch';
   };
 
   Player.prototype.right = function () {
@@ -57,5 +56,10 @@
    */
   Player.prototype.Health = null;
 
+  /**
+   * Inherit from `Objects Character`.
+   */
+  Player.prototype.__proto__ = Core.Objects.Character;
+
   Game.Entities.Player = Player;
-}(Game));
+} (Game));

@@ -40,5 +40,14 @@ module.exports = function(io, sessionStore) {
         });
       }
     }
+
+    socket.on('player status', function(status) {
+
+      socket.broadcast.emit('status', status);
+    });
+
+    socket.on('win', function(time) {
+      socket.broadcast.emit('message', message);
+    });
   });
 };

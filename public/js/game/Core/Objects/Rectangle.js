@@ -6,9 +6,7 @@
    * @api protected
    */
   function Rectangle() {
-
-    this.width = 0;
-    this.height = 0;
+    //
   }
 
   /**
@@ -37,9 +35,24 @@
     this.position = position || [0, 0];
   };
 
-/**
- * Inherit from `Objects Body`.
- */
+  /**
+   * Rectangle width
+   */
+  Rectangle.prototype.width = 0;
+
+  /**
+   * Rectangle height
+   */
+  Rectangle.prototype.height = 0;
+
+  /**
+   * Rectangle position
+   */
+  Rectangle.prototype.position = [0, 0];
+
+  /**
+   * Inherit from `Objects Body`.
+   */
   Rectangle.prototype.__proto__ = Core.Objects.Body;
 
   /**

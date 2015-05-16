@@ -6,8 +6,17 @@
       Game.Core.setCanvas('fightArea');
       Game.Core.loadBackgroundImage('/images/zoneDeCombat.png');
 
+      Game.setPlayersSprites(75, 75, ['/images/stickman.png', '/images/stickman_opponent.png']);
       Game.setSocket($socket.fight);
-      Game.start();
+
+      Game.preload();
+
+      var waiting = setInterval(function() {
+        if(Game.Core.ready()) {
+          clearInterval(waiting);
+          Game.start();
+        }
+      }, 100);
     };
   }];
 

@@ -48,7 +48,6 @@ module.exports = function(io, sessionStore) {
 
       //broadcast message to all users included emitter
       socket.broadcast.emit('message', message);
-      socket.emit('message', message);
     });
   });
 };
