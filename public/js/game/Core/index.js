@@ -21,6 +21,7 @@
    * @api public
    */
   Core.prototype.setCanvas = function(id) {
+
     var element = document.getElementById(id);
 
     this._canvas = element.getContext('2d');
@@ -49,6 +50,7 @@
    * @api protected
    */
   Core.prototype.loadImage = function(path, callback) {
+
     var image = new Image();
       image.src = path;
 
@@ -64,6 +66,7 @@
    * @api public
    */
   Core.prototype.loadBackgroundImage = function(path) {
+
     var that = this;
 
     this._backgroundImage = this.loadImage(path, function() {

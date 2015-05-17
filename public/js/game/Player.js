@@ -21,28 +21,42 @@
     this.create(80, 170);
 
     this.attacking = false;
+
+    this.orientation = 'left';
   };
 
   Player.prototype.jump = function () {
 
     this.setState('jump');
+
+    this.position[1] -= SPEED;
   };
 
   Player.prototype.crouch = function () {
 
     this.setState('crouch');
+
+    this.position[1] += SPEED;
   };
 
   Player.prototype.left = function () {
-    
-    this.setState('retire');
+
+    if(this.orientation === 'left') {
+      this.setState('retire');
+    } else {
+      this.setState('run');
+    }
 
     this.position[0] -= SPEED;
   };
 
   Player.prototype.right = function () {
     
-    this.setState('run');
+    if(this.orientation === 'left') {
+      this.setState('run');
+    } else {
+      this.setState('retire');
+    }
 
     this.position[0] += SPEED;
   };
@@ -84,7 +98,7 @@
 
     if(this.state === 'kick' || this.state === 'punch') {
       damage = DAMAGE_ATTACK;
-    } else if(this.state === 'specialAttack') {
+    } else if(this.state === 'special') {
       damage = DAMAGE_SPECIAL_ATTACK;
     } else {
       return;
@@ -106,6 +120,15 @@
     Player2.Health.loose(damage);
 
     this.attacking = false;
+  };
+
+  /**
+   * Position setter
+   *
+   * @api public
+   */
+  Player.prototype.setOrientation = function(orientation) {
+    this.orientation = orientation;
   };
 
   /**

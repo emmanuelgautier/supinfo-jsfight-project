@@ -100,10 +100,11 @@
       secondPlayer.setSprites(this._sprites[1], this._spritesWidth, this._spritesHeight, {
         'default': 11,
         'run'    : [4, 3, 2],
-        'retire' : 31,
-        'jump'   : [16, 17],
-        'crouch' : 20,
-        'block'  : 40,
+        'retire' : 29,
+        'jump'   : [16, 15],
+        'crouch' : 14,
+        'block'  : 43,
+        'punch'  : [38, 37],
         'kick'   : [45, 46],
         'special': [49, 50] 
       });
@@ -129,9 +130,9 @@
     });
 
     //position check
-    //if one player win
-    if(myPlayer.Health.getLife() <= 0) {
-      //this.
+    //if one player win socket emit
+    if(opponentPlayer.Health.getLife() <= 0) {
+      this._socket.emit('win');
     }
   };
 
@@ -200,9 +201,13 @@
     if(position === 'left') {
       this.myPlayer = this.users[this.uuids[0]].player;
       this.opponentPlayer = this.users[this.uuids[1]].player;
+      this.myPlayer.setOrientation('left');
+      this.opponentPlayer.setOrientation('right');
     } else {
       this.myPlayer = this.users[this.uuids[1]].player;
       this.opponentPlayer = this.users[this.uuids[0]].player;
+      this.myPlayer.setOrientation('right');
+      this.opponentPlayer.setOrientation('left');
     }
 
     this._token = fightToken;

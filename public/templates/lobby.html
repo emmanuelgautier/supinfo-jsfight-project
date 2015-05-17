@@ -1,16 +1,18 @@
 <div class="lobbyPage">
-  <div class="row">
+  <div class="row" ng-controller="ChatController" ng-init="init()">
     <div class="col-md-3 quickFightZone">
         <img src="images/zoneDeCombat.png" class="imgZoneDeCombat" alt="img Zone De Combat" />
         <button class= "quickFightButton" type="button">Quick Fight</button>
     </div>
 
-    <div class="col-md-6 chatBox" ng-controller="ChatController" ng-init="init()">
+    <div class="col-md-6 chatBox">
         <img src="images/chatbox.png" class="imgChatBox" alt="Ban chatbox" />
 
         <ul class="list-group" ng-repeat="message in messages">
-            <li class="list-group-item ">message</li>     <!-- insérer la variable message.text de chat.js ici -->
-            <li class="list-group-item ">User 1</li>       <!-- insérer la variable message.author de chat.js ici -->
+            <li class="list-group-item">
+                <h4 class="list-group-item-heading">{{message.author.displayName}}</h4>
+                <p class="list-group-item-text">{{message.text}}</p>
+            </li>
         </ul>
 
         <form action="javascript:;" ng-submit="newMessage()" class="form-inline">

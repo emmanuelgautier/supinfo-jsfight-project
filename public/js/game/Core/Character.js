@@ -104,6 +104,14 @@
       }
     }
 
+    if(this.state != 'jump' && this.state != 'crouch' && this.position[1] > Core.Static.FLOOR) {
+      this.position[1] = Core.Static.FLOOR;
+    }
+
+    if(this.position[1] <= Core.Static.FLOOR && this.state != 'jump') {
+      this.position[1] += 1;
+    }
+
     this.stateEventChange = false;
   };
 
