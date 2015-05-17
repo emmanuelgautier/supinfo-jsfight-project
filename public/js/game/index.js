@@ -34,6 +34,8 @@
     this._socket = null;
 
     this.running = false;
+
+    this.fightToken = null;
   }
 
   /**
@@ -74,9 +76,6 @@
    */
   Game.prototype.preload = function() {
 
-    this.World = new this.Entities.World();
-      this.World.create();
-
     //create my player
     var myPlayer = this.myPlayer = this._createPlayer();
       myPlayer.setSprites(this._sprites[0], this._spritesWidth, this._spritesHeight, {
@@ -86,9 +85,11 @@
         'jump'   : [16, 17],
         'crouch' : 20,
         'block'  : 40,
+        'punch'  : [49, 50],
         'kick'   : [45, 46],
-        'special': [49, 50] 
+        'special': [33, 36]
       });
+      myPlayer.position = [this.Core.Static.MARGIN_INITAL_POSITION, this.Core.Static.FLOOR];
 
     //create opponent player
     var opponentPlayer = this.opponentPlayer = this._createPlayer();
@@ -102,6 +103,7 @@
         'kick'   : [45, 46],
         'special': [49, 50] 
       });
+      opponentPlayer.position = [this.Core.Static.CANVAS_WIDTH - this.Core.Static.MARGIN_INITAL_POSITION, this.Core.Static.FLOOR];
   };
 
   /**
@@ -110,7 +112,14 @@
    */
   Game.prototype.update = function() {
 
-    this.broadcast('position', myPlayer.position);
+    var myPlayer = this.myPlayer;
+
+    this._socket.emit('player status', {
+      position: myPlayer.position,
+      width: myPlayer.width,
+      height: myPlayer.height,
+      state: myPlayer.state
+    });
 
     //position check
     //if one player win
@@ -119,13 +128,12 @@
   /**
    * Start game
    *
-   * @param {Object} fight
+   * @param {String} fightToken
    * @api public
    */
-  Game.prototype.start = function(fight) {
+  Game.prototype.start = function(fightToken) {
 
-    /*this._token = fight.token;
-    this._fight = fight;*/
+    this._token = fightToken;
 
     var myPlayer = this.myPlayer,
         opponentPlayer = this.opponentPlayer;
@@ -139,6 +147,8 @@
       this.Controls.onPunch(myPlayer.punch);
       this.Controls.onKick(myPlayer.kick);
       this.Controls.onSpecialAttack(myPlayer.specialAttack);
+
+    this.Controls.Player = myPlayer;
 
     var Health = new this.Entities.Health();
       Health.setLife(INITIAL_LIFE);
@@ -172,11 +182,12 @@
   Game.prototype.run = function() {
 
     if(this.running) {
-      this.updatePaddles();
 
       this.time = new Date().getTime();
       if(this.lastTime <= this.time) {
         this.update();
+
+        this.Core.update();
 
         this.lastTime += this.physicsElapsed;
       }

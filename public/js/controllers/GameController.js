@@ -3,8 +3,14 @@
 
   var GameController = ['$scope', '$routeParams', '$socket', function($scope, $routeParams, $socket) {
     $scope.startGame = function() {
+
+      var roomToken = $routeParams.token;
+
+      $socket.fight.join(roomToken);
+      $socket.fight.emit('enter room', roomToken);
+
       Game.Core.setCanvas('fightArea');
-      Game.Core.loadBackgroundImage('/images/zoneDeCombat.png');
+      Game.Core.loadBackgroundImage('/images/fight_background.png');
 
       Game.setPlayersSprites(75, 75, ['/images/stickman.png', '/images/stickman_opponent.png']);
       Game.setSocket($socket.fight);
@@ -14,7 +20,7 @@
       var waiting = setInterval(function() {
         if(Game.Core.ready()) {
           clearInterval(waiting);
-          Game.start();
+          Game.start(roomToken);
         }
       }, 100);
     };

@@ -146,53 +146,59 @@
    * @api public
    */
   Controls.prototype.listen = function() {
+    var that = this;
+
+    var context = this;
+
+    if(this.Player != null) {
+      context = this.Player;
+    }
 
     window.onkeydown = function(event) {
       switch(event.keyCode) {
         case KEY_Q:
-          socket.emit('move left');
-          this.left.call();
+          that.left.call(context);
           break;
 
         case KEY_D:
-        socket.emit('move left');
-          this.right.call();
+          that.right.call(context);
           break;
 
         case KEY_Z:
-          socket.emit('move left');
-          this.jump.call();
+          that.jump.call(context);
           break;
 
         case KEY_S:
-          socket.emit('crouch');
-          this.crouch.call();
+          that.crouch.call(context);
           break;
 
         case KEY_I:
-          socket.emit('block');
-          this.block.call();
+          that.block.call(context);
           break;
 
         case KEY_O:
-          socket.emit('punch');
-          this.punch.call();
+          that.punch.call(context);
           break;
 
         case KEY_K:
-          socket.emit('kick');
-          this.kick.call();
+          that.kick.call(context);
           break;
 
         case KEY_L:
-          socket.emit('specialAttack');
-          this.specialAttack.call();
+          that.specialAttack.call(context);
           break;
 
         default: break;
       }
+
+      event.preventDefault();
     };
   };
+
+  /**
+   * Player object
+   */
+  Controls.prototype.Player = null;
 
   Game.Entities.Controls = Controls;
 }(window, Game));

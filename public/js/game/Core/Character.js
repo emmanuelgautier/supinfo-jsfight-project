@@ -8,6 +8,7 @@
   function Character() {
     this.state = 'default';
     this.stateSpriteNumber = 0;
+    this.stateEventChange = false;
 
     this._spritesLoaded = false;
 
@@ -21,6 +22,9 @@
     this._spritePerLine = 0;
 
     this._sprites = [];
+
+    this.stateEventNotChangedCounter = 0;
+    this.changeAnimationCounter = 0;
   }
 
   /**
@@ -31,8 +35,6 @@
    * @api protected
    */
   Character.prototype.spritePosition = function(number) {
-    number -= 1;
-
     var column = number % this._spritePerLine,
         line = (number - column) / this._spritePerLine;
 
@@ -56,7 +58,7 @@
 
     this._spritesImage = Core.loadImage(image, function() {
       that._imageWidth = that._spritesImage.width;
-      that._spriteHeight = that._spritesImage.height;
+      that._imageHeight = that._spritesImage.height;
       that._spritePerLine = Math.ceil(that._imageWidth / that._spriteWidth);
 
       for(var state in actionSprites) {
@@ -77,6 +79,35 @@
   };
 
   /**
+   * Update character
+   *
+   */
+  Character.prototype.update = function() {
+
+    if(!this.stateEventChange) {
+      this.stateEventNotChangedCounter += 1;
+      this.changeAnimationCounter += 1;
+    }
+
+    if(this.stateEventNotChangedCounter >= 80) {
+      this.setState('default');
+    }
+
+    if(this.changeAnimationCounter === 15) {
+
+      this.changeAnimationCounter = 0;
+
+      if(this._sprites[this.state].length === (this.stateSpriteNumber + 1)) {
+        this.stateSpriteNumber -= 1;
+      } else {
+        this.stateSpriteNumber += 1;
+      }
+    }
+
+    this.stateEventChange = false;
+  };
+
+  /**
    * Check if the object is ready
    *
    * @return {Boolean}
@@ -93,20 +124,62 @@
    * @api public
    */
   Character.prototype.getSprite = function() {
-    if(typeof this._sprites[this.state] === 'number') {
-      return [this._spritesImage, this._sprites[this.state][0], this._sprites[this.state][1]];
+    if(!this._sprites[this.state]) {
+      this.state = 'default';
     }
 
-    return [this._spritesImage, this._sprites[this.state][this.stateSpriteNumber][0], this._sprites[this.state][this.stateSpriteNumber][1]];
+    if(typeof this._sprites[this.state][0] === 'number') {
+      return [
+        this._spritesImage,
+        this._sprites[this.state][0],
+        this._sprites[this.state][1]
+      ];
+    }
+
+    return [
+      this._spritesImage,
+      this._sprites[this.state][this.stateSpriteNumber][0],
+      this._sprites[this.state][this.stateSpriteNumber][1]
+    ];
+  };
+
+  /**
+   * Set state and monitor state changes
+   *
+   * @param {String} state
+   * @api public
+   */
+  Character.prototype.setState = function(state) {
+
+    this.stateEventChange = true;
+
+    if(state != this.state) {
+      this.stateSpriteNumber = 0;
+
+      this.stateEventNotChangedCounter = 0;
+      this.changeAnimationCounter = 0;
+    }
+
+    this.state = state;
+  };
+
+  /**
+   * Get sprite dimensions
+   *
+   * @return {Array}
+   * @api public
+   */
+  Character.prototype.getSpriteDimensions = function() {
+    return [this._spriteWidth, this._spriteHeight]
   };
 
   /**
    * Inherit from `Objects Rectangle`.
    */
-  Rectangle.prototype.__proto__ = Core.Objects.Rectangle;
+  Character.prototype.__proto__ = Core.Objects.Rectangle;
 
   /**
    * Expose `Character object`.
    */
-  Core.Objects.Character = new Character();
+  Core.Objects.Character = Character;
 } (Core));

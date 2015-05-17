@@ -14,8 +14,7 @@ module.exports = function(io, sessionStore) {
   chat.on('connection', function(socket) {
     _user[socket.id] = {
       id: null,
-      u: null,
-      rooms: []
+      u: null
     };
 
     var cookies = socket.request.headers.cookie;

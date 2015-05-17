@@ -17,7 +17,7 @@ module.exports = function(io, sessionStore) {
     _user[socket.id] = {
       id: null,
       u: null,
-      rooms: []
+      roomToken: null
     };
 
     var cookies = socket.request.headers.cookie;
@@ -41,13 +41,20 @@ module.exports = function(io, sessionStore) {
       }
     }
 
+    socket.on('enter room', function(token) {
+      _user[socket.id].roomToken = token;
+
+      socket.broadcast.emit('joining room', _user[socket.id].u);
+    })
+
     socket.on('player status', function(status) {
 
-      socket.broadcast.emit('status', status);
+      socket.to(_user[socket.id].roomToken).emit('status', status);
     });
 
     socket.on('win', function(time) {
-      socket.broadcast.emit('message', message);
+
+      socket.to(_user[socket.id].roomToken).emit('win');
     });
   });
 };

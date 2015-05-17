@@ -15,7 +15,7 @@
    * @param {Array} position
    * @api public
    */
-  Rectangle.prototype.create = function(width, height, position) {
+  Rectangle.prototype.create = function(width, height) {
 
     if(typeof width != 'number') {
       throw "Rectangle width must be a number !";
@@ -25,14 +25,8 @@
       throw "Rectangle width must be a number !";
     }
 
-    if(position && typeof position != 'object') {
-      throw "Rectangle position must be an array !";
-    }
-
     this.width = width;
     this.height = height;
-
-    this.position = position || [0, 0];
   };
 
   /**
@@ -58,5 +52,5 @@
   /**
    * Expose `Rectangle object`.
    */
-  Core.Objects.Rectangle = Rectangle;
+  Core.Objects.Rectangle = new Rectangle();
 } (Core));
