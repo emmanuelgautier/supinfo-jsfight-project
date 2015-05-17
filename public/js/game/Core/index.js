@@ -88,7 +88,7 @@
       throw "position error";
     }
 
-    if((object1.position[0] + object1.width) >= object2.position[0]) {
+    if((object1.position[0] + object1.width) >= (object2.position[0] - (object1.width * 10 / 100))) {
       return true;
     }
 
@@ -118,11 +118,13 @@
       //move players
       var collisionWidth = (users[0].position[0] + users[0].width) - users[1].position[0];
 
+      collisionWidth = collisionWidth / 10;
+
       users[0].position[0] -= collisionWidth;
       users[1].position[0] += collisionWidth;
 
-      users[0].onCollision(users[1]);
-      users[1].onCollision(users[0]);
+      users[0].onCollision.call(users[0], users[1]);
+      users[1].onCollision.call(users[1], users[0]);
     }
   };
 

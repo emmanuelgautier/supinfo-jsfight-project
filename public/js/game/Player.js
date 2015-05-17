@@ -19,6 +19,8 @@
     this.Health = Health;
 
     this.create(80, 170);
+
+    this.attacking = false;
   };
 
   Player.prototype.jump = function () {
@@ -52,29 +54,37 @@
   };
 
   Player.prototype.punch = function () {
-    
+
+    this.attacking = true;
+
     this.setState('punch');
   };
 
   Player.prototype.kick = function () {
+
+    this.attacking = true;
 
     this.setState('kick');
   };
 
   Player.prototype.specialAttack  = function () {
 
+    this.attacking = true;
+
     this.setState('special');
   };
 
   Player.prototype.onCollision = function(Player2) {
 
-    console.log('collide');
-
     var damage = 0;
 
-    if(this.status === 'kick' || this.status === 'punch') {
+    if(!this.attacking) {
+      return;
+    }
+
+    if(this.state === 'kick' || this.state === 'punch') {
       damage = DAMAGE_ATTACK;
-    } else if(this.status === 'specialAttack') {
+    } else if(this.state === 'specialAttack') {
       damage = DAMAGE_SPECIAL_ATTACK;
     } else {
       return;
@@ -82,18 +92,20 @@
 
     //if player is jumping damages are higher except if player2 is crouched
     if(this.position[1] < Game.Core.Static.FLOOR) {
-      if(Player2.getStatus() != 'crouch') {
+      if(Player2.getState() != 'crouch') {
         return;
       } else {
         damage = damage * 2;
       }
     }
 
-    if(Player2.getStatus() === 'block') {
+    if(Player2.getState() === 'block') {
       damage = damage / 2;
     }
 
     Player2.Health.loose(damage);
+
+    this.attacking = false;
   };
 
   /**

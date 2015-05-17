@@ -10,14 +10,17 @@ module.exports = function(io, sessionStore) {
 
   var fight = io.of('/fight');
 
-  fight.on('connection', function(socket) {
   var _user = {},
       _room = {};
 
+  fight.on('connection', function(socket) {
+
     _user[socket.id] = {
       id: null,
+      socket: socket,
       u: null,
-      roomToken: null
+      gamePosition: null,
+      roomToken: null,
     };
 
     var cookies = socket.request.headers.cookie;
@@ -42,10 +45,40 @@ module.exports = function(io, sessionStore) {
     }
 
     socket.on('enter room', function(token) {
+
+      if(!token) {
+        return;
+      }
+
+      if(!_room[token]) {
+        _room[token] = [];
+      }
+
       _user[socket.id].roomToken = token;
+      _room[token].push(socket.id);
+
+      socket.join(token);
 
       socket.broadcast.emit('joining room', _user[socket.id].u);
-    })
+    });
+
+    socket.on('ready', function() {
+
+      var room = _room[_user[socket.id].roomToken];
+
+      //if the first player is already ready
+      if(room.length === 2 && _user[room[0]].gamePosition != null) {
+
+        _user[room[1]].gamePosition = 'right';
+
+       _user[room[0]].socket.emit('start', _user[room[0]].gamePosition);
+        _user[room[1]].socket.emit('start', _user[room[1]].gamePosition);
+
+        return;
+      }
+
+      _user[room[0]].gamePosition = 'left';
+    });
 
     socket.on('player status', function(status) {
 

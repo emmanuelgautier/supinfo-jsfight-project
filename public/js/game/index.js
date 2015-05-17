@@ -4,9 +4,7 @@
   //$ IS NOT JQUERY LIBRARY LOADING !
   //This is jqlite angular implementation
 
-  var INITIAL_LIFE = 100,
-      ATTACK_DAMAGE = 10,
-      SPECIAL_ATTACK_DAMAGE = 20;
+  var INITIAL_LIFE = 100;
 
   /**
    * @constructor
@@ -36,6 +34,12 @@
     this.running = false;
 
     this.fightToken = null;
+
+    this.timerId = null;
+    this.lifeBarsId = [null, null];
+
+    this.startTime = null;
+    this.endTime = null;
   }
 
   /**
@@ -77,8 +81,8 @@
   Game.prototype.preload = function() {
 
     //create my player
-    var myPlayer = this.myPlayer = this._createPlayer();
-      myPlayer.setSprites(this._sprites[0], this._spritesWidth, this._spritesHeight, {
+    var firstPlayer = this._createPlayer();
+      firstPlayer.setSprites(this._sprites[0], this._spritesWidth, this._spritesHeight, {
         'default': 0,
         'run'    : [7, 8, 9],
         'retire' : 31,
@@ -89,13 +93,13 @@
         'kick'   : [45, 46],
         'special': [33, 36]
       });
-      myPlayer.position = [this.Core.Static.MARGIN_INITAL_POSITION, this.Core.Static.FLOOR];
+      firstPlayer.position = [this.Core.Static.MARGIN_INITAL_POSITION, this.Core.Static.FLOOR];
 
     //create opponent player
-    var opponentPlayer = this.opponentPlayer = this._createPlayer();
-      opponentPlayer.setSprites(this._sprites[1], this._spritesWidth, this._spritesHeight, {
-        'default': 0,
-        'run'    : [7, 8, 9],
+    var secondPlayer = this._createPlayer();
+      secondPlayer.setSprites(this._sprites[1], this._spritesWidth, this._spritesHeight, {
+        'default': 11,
+        'run'    : [4, 3, 2],
         'retire' : 31,
         'jump'   : [16, 17],
         'crouch' : 20,
@@ -103,35 +107,103 @@
         'kick'   : [45, 46],
         'special': [49, 50] 
       });
-      opponentPlayer.position = [this.Core.Static.CANVAS_WIDTH - this.Core.Static.MARGIN_INITAL_POSITION, this.Core.Static.FLOOR];
+      secondPlayer.position = [this.Core.Static.CANVAS_WIDTH - this.Core.Static.MARGIN_INITAL_POSITION, this.Core.Static.FLOOR];
   };
 
   /**
+   * Synchronize  players and check win statement
    *
    * @api protected
    */
   Game.prototype.update = function() {
 
-    var myPlayer = this.myPlayer;
+    var myPlayer = this.myPlayer,
+        opponentPlayer = this.opponentPlayer;
 
     this._socket.emit('player status', {
       position: myPlayer.position,
       width: myPlayer.width,
       height: myPlayer.height,
-      state: myPlayer.state
+      state: myPlayer.getState(),
+      health: opponentPlayer.Health.getLife()
     });
 
     //position check
     //if one player win
+    if(myPlayer.Health.getLife() <= 0) {
+      //this.
+    }
+  };
+
+  /**
+   * Update information interface
+   *
+   * @api protected
+   */
+  Game.prototype.updateInterface = function() {
+
+    var percentageLife = [];
+      percentageLife[0] = this.users[this.uuids[0]].player.Health.getLife() / INITIAL_LIFE * 100;
+      percentageLife[1] = this.users[this.uuids[1]].player.Health.getLife() / INITIAL_LIFE * 100;
+
+    $(document.getElementById(this.lifeBarsId[0])).css('width', percentageLife[0] + '%');
+    $(document.getElementById(this.lifeBarsId[1])).css('width', percentageLife[1] + '%');
+  };
+
+  /**
+   * Receive opponent status notification and update player status
+   *
+   * @param {String} status
+   * @api protected
+   */
+  Game.prototype.receiveStatusNotification = function(status) {
+
+    if(!status) {
+      return;
+    }
+
+    var player = this.opponentPlayer;
+
+    player.position = status.position;
+    player.width = status.width;
+    player.height = status.height;
+    player.setState(status.state);
+
+    this.myPlayer.Health.setLife(status.health);
+
+  };
+
+  /**
+   * Hande socket communications
+   *
+   * @api public
+   */
+  Game.prototype.socketHandler = function() {
+
+    var that = this;
+
+    this._socket.on('status', function(status) {
+
+      that.receiveStatusNotification.call(that, status);
+    });
   };
 
   /**
    * Start game
    *
    * @param {String} fightToken
+   * @param {String} position
    * @api public
    */
-  Game.prototype.start = function(fightToken) {
+  Game.prototype.start = function(fightToken, position) {
+
+    if(position === 'left') {
+      this.myPlayer = this.users[this.uuids[0]].player;
+      this.opponentPlayer = this.users[this.uuids[1]].player;
+    } else {
+      this.myPlayer = this.users[this.uuids[1]].player;
+      this.opponentPlayer = this.users[this.uuids[0]].player;
+    }
 
     this._token = fightToken;
 
@@ -150,17 +222,16 @@
 
     this.Controls.Player = myPlayer;
 
-    var Health = new this.Entities.Health();
-      Health.setLife(INITIAL_LIFE);
-
-    this.users[this.uuids[0]].Health = $.clone(Health);
-    this.users[this.uuids[1]].Health = $.clone(Health);
+    this.users[this.uuids[0]].player.Health.setLife(INITIAL_LIFE);
+    this.users[this.uuids[1]].player.Health.setLife(INITIAL_LIFE);
 
     this.Core.startRendering();
-
     this.Controls.listen();
+    this.socketHandler();
 
     this.running = true;
+
+    this.startTime = (new Date()).getMilliseconds();
 
     this.run();
   };
@@ -171,6 +242,8 @@
    * @api public
    */
   Game.prototype.stop = function() {
+
+    this.endTime = (new Date()).getMilliseconds();
 
     this.running = false;
   };
@@ -186,6 +259,7 @@
       this.time = new Date().getTime();
       if(this.lastTime <= this.time) {
         this.update();
+        this.updateInterface();
 
         this.Core.update();
 
@@ -207,6 +281,27 @@
   Game.prototype.calculatePhysicsElapsed = function(interval) {
 
     return Math.round(1000 / interval);
+  };
+
+  /**
+   * Set timer html id
+   *
+   * @param {String} timerId
+   * @api public
+   **/
+  Game.prototype.setTimer = function(timerId) {
+    this.timerId = timerId;
+  };
+
+  /**
+   * Set Life bars id
+   *
+   * @param {String} firstPlayerLifeBarId
+   * @param {String} secondPlayerLifeBarId
+   * @api public
+   */
+  Game.prototype.setLifeBars = function(firstPlayerLifeBarId, secondPlayerLifeBarId) {
+    this.lifeBarsId = [firstPlayerLifeBarId, secondPlayerLifeBarId];
   };
 
   /**
@@ -244,4 +339,4 @@
   Game.prototype.Entities = {};
 
   window.Game = new Game();
-}(window, angular.element()));
+}(window, angular.element));

@@ -164,6 +164,17 @@
   };
 
   /**
+   * State getter
+   *
+   * @return {String}
+   * @api public
+   */
+  Character.prototype.getState = function() {
+
+    return this.state;
+  };
+
+  /**
    * Get sprite dimensions
    *
    * @return {Array}

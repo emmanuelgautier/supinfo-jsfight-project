@@ -6,7 +6,6 @@
 
       var roomToken = $routeParams.token;
 
-      $socket.fight.join(roomToken);
       $socket.fight.emit('enter room', roomToken);
 
       Game.Core.setCanvas('fightArea');
@@ -14,13 +13,20 @@
 
       Game.setPlayersSprites(75, 75, ['/images/stickman.png', '/images/stickman_opponent.png']);
       Game.setSocket($socket.fight);
+      Game.setLifeBars('user1-lifebar', 'user2-lifebar');
+      Game.setTimer('timer');
 
       Game.preload();
 
       var waiting = setInterval(function() {
         if(Game.Core.ready()) {
           clearInterval(waiting);
-          Game.start(roomToken);
+
+          $socket.fight.emit('ready');
+
+          $socket.fight.on('start', function(position) {
+            Game.start(roomToken, position);
+          });
         }
       }, 100);
     };
